@@ -1,27 +1,29 @@
 const mysql = require('mysql2/promise');
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 async function runMigrations() {
   let connection;
   
   try {
-    // First, create connection without database
+    // Connect to MySQL server (without specifying DB first)
     connection = await mysql.createConnection({
       host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD
     });
 
     console.log('Connected to MySQL server');
 
-    // Create database if not exists
-    await connection.query(`CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME}`);
+    // Create database if it doesn't exist
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\``);
     console.log(`✓ Database '${process.env.DB_NAME}' created or already exists`);
 
     // Use the database
-    await connection.query(`USE ${process.env.DB_NAME}`);
+    await connection.query(`USE \`${process.env.DB_NAME}\``);
 
-    // Create users table
+    // Users table
     await connection.query(`
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -34,7 +36,7 @@ async function runMigrations() {
     `);
     console.log('✓ Users table created');
 
-    // Create test_attempts table
+    // Test attempts table
     await connection.query(`
       CREATE TABLE IF NOT EXISTS test_attempts (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -49,7 +51,7 @@ async function runMigrations() {
     `);
     console.log('✓ Test attempts table created');
 
-    // Create event_logs table
+    // Event logs table
     await connection.query(`
       CREATE TABLE IF NOT EXISTS event_logs (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -68,10 +70,8 @@ async function runMigrations() {
     `);
     console.log('✓ Event logs table created');
 
-    // Insert example user (password: Test@123)
-    const bcrypt = require('bcryptjs');
+    // Insert example user
     const hashedPassword = await bcrypt.hash('Test@123', 10);
-    
     await connection.query(`
       INSERT IGNORE INTO users (name, email, password)
       VALUES ('John Doe', 'gaurav@ex.com', ?)
@@ -81,7 +81,7 @@ async function runMigrations() {
     console.log('\n✓✓✓ All migrations completed successfully! ✓✓✓\n');
 
   } catch (error) {
-    console.error('Migration failed:', error);
+    console.error('Migration failed:', error.message);
     throw error;
   } finally {
     if (connection) {
@@ -90,9 +90,15 @@ async function runMigrations() {
   }
 }
 
-runMigrations()
-  .then(() => process.exit(0))
-  .catch(error => {
-    console.error(error);
-    process.exit(1);
-  });
+// Export function for server.js
+module.exports = runMigrations;
+
+// Optional: run manually if executed directly
+if (require.main === module) {
+  runMigrations()
+    .then(() => process.exit(0))
+    .catch(err => {
+      console.error(err);
+      process.exit(1);
+    });
+}
