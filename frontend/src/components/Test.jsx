@@ -333,10 +333,10 @@ const Test = () => {
             <div className="flex items-center gap-8">
               <button
                 onClick={handleViewLogs}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-red-800 bg-gray-100 hover:bg-gray-200  rounded-lg transition-colors"
               >
                 <svg
-                  className="h-5 w-5 text-gray-700"
+                  className="h-5 w-5 text-red-800"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
