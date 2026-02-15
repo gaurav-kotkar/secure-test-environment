@@ -74,7 +74,7 @@ async function runMigrations() {
     const hashedPassword = await bcrypt.hash('Test@123', 10);
     await connection.query(`
       INSERT IGNORE INTO users (name, email, password)
-      VALUES ('John Doe', 'gaurav@ex.com', ?)
+      VALUES ('Gaurav Kotkat', 'gaurav@ex.com', ?)
     `, [hashedPassword]);
     console.log('✓ Example user created (Email: gaurav@ex.com, Password: Test@123)');
 

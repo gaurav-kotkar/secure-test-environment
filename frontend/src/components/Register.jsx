@@ -116,7 +116,7 @@ const Register = () => {
                 value={formData.name}
                 onChange={handleChange}
                 className={`input-field ${formErrors.name ? 'border-red-500' : ''}`}
-                placeholder="John Doe"
+                placeholder="Gaurav Kotkat"
               />
               {formErrors.name && (
                 <p className="mt-1 text-sm text-red-600">{formErrors.name}</p>
