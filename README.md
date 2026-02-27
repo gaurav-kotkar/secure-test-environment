@@ -1,5 +1,7 @@
 # Secure Test Environment Enforcement
 
+🚀 **Live Demo:** https://secure-test-environment-ashen.vercel.app/login
+
 A comprehensive secure testing platform with real-time violation tracking, event logging, and audit trail capabilities.
 
 ## 🎯 Features
